@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://learning-lambda-sam-first-project-msyoki/682ad5aa82a06d48b45c9e6aca6f6e50
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+      - x86_64
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+      SamResourceId: HelloWorldFunction
+  ClockFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://learning-lambda-sam-first-project-msyoki/e32602cb16dc6ff6771e8da5acc3a73e
+      Handler: handler.clock
+      Runtime: nodejs18.x
+      Events:
+        Clock:
+          Type: Api
+          Properties:
+            Path: /clock
+            Method: get
+    Metadata:
+      SamResourceId: ClockFunction
+  ConvertTime:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://learning-lambda-sam-first-project-msyoki/eb2646e65c235eab9ed018c6f34b4859
+      Handler: handler.convertTime
+      Runtime: nodejs18.x
+      Events:
+        Clock:
+          Type: Api
+          Properties:
+            Path: /convert-time
+            Method: get
+    Metadata:
+      SamResourceId: ConvertTime
+Outputs:
+  HelloWorldApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunction
+      - Arn
+  HelloWorldFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunctionRole
+      - Arn
